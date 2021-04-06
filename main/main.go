@@ -1,12 +1,11 @@
 package main
 
 import (
-	"github.com/YRIDZE/"
+	"github.com/YRIDZE/DIPLOMA2021/main/api"
 )
-
 
 func main() {
 
-	router := Routes()
+	router := api.Routes()
 	router.Run(":8080")
 }

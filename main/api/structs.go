@@ -1,4 +1,4 @@
-package main
+package api
 
 type Employee struct {
 	IdEmployee int    `json:"idEmployee"`
@@ -14,20 +14,28 @@ type Courses struct {
 }
 
 type Technologies struct {
-	IdTechnology int    `json:"idTechnoligy"`
+	IdTechnology int    `json:"idTechnologies"`
 	Title        string `json:"title"`
 }
 
 type EmployeeCourses struct {
 	Employee
 	Courses
-	Status bool `json:"status"`
+	Status Stat `json:"status"`
 }
 
 type EmployeeTechnology struct {
 	Employee
 	Technologies
 }
+
+type Stat string
+
+const (
+	F  Stat = "finished"
+	IP Stat = "in progress"
+	S  Stat = "suggested"
+)
 
 var employees []Employee
 var courses []Courses
