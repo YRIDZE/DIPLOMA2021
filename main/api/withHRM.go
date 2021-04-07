@@ -4,63 +4,69 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
-//даем HRM инфу по назначеным курсам *
-//TODO: проверить!!
 
+//даем HRM инфу по назначеным курсам *
 func GetEmployeeCourse(context *gin.Context) {
 	idEmployee, _ := strconv.Atoi(context.Params.ByName("IdEmployee"))
-	for _, item := range employeeCourses {
+	for _, item := range Employee_courses {
 		if item.Employee.IdEmployee == idEmployee {
 			context.JSON(http.StatusOK, item)
 			return
 		}
 	}
-	context.JSON(http.StatusOK, employeeCourses)
+	context.JSON(http.StatusOK, Employee_courses)
 }
 
 //даем HRM инфу по курсам, которые в процессе прохождения
-//TODO: проверить!!
 func GetStartedEmplCourse(context *gin.Context) {
 	idEmployee, _ := strconv.Atoi(context.Params.ByName("IdEmployee"))
-	for _, item := range employeeCourses {
+	for _, item := range Employee_courses {
 		if item.Employee.IdEmployee == idEmployee && item.Status == IP {
 			context.JSON(http.StatusOK, item)
 			return
 		}
 	}
-	context.JSON(http.StatusOK, employeeCourses)
+	context.JSON(http.StatusOK, Employee_courses)
 }
 
 //даем HRM инфу про законченые курсы
-//TODO: проверить!!
 func GetFinishedCourses(context *gin.Context) {
 	idEmployee, _ := strconv.Atoi(context.Params.ByName("IdEmployee"))
-	for _, item := range employeeCourses {
+	for _, item := range Employee_courses {
 		if item.Employee.IdEmployee == idEmployee && item.Status == F {
 			context.JSON(http.StatusOK, item)
 			return
 		}
 	}
-	context.JSON(http.StatusOK, employeeCourses)
+	context.JSON(http.StatusOK, Employee_courses)
 }
 
+// передаем данные курса и работника, который его начал
 func PostEmployeeCourse(context *gin.Context) {
-	var employeeСourse EmployeeCourses
-	body:= context.Request.Body
-	x, _ := ioutil.ReadAll(body)
-	fmt.Printf("body is: %s \n", string(x))
+	var employeeCourse EmployeeCourses
+	x, _ := ioutil.ReadAll(context.Request.Body)
 
-	_ = json.Unmarshal(x, &employeeСourse)
-	prettyJSON, _ := json.MarshalIndent(employeeСourse, "", "    ")
-	fmt.Printf("%s\n", string(prettyJSON))
+	result := gjson.Get(string(x), "employee")
+	result2 := gjson.Get(string(x), "courses")
+	result3 := gjson.Get(string(x), "status")
 
-	context.BindJSON(&employeeСourse)
-	employeeCourses = append(employeeCourses, employeeСourse)
-	context.JSON(http.StatusOK, employeeСourse)
-	fmt.Println(employeeCourses)
+	json.Unmarshal([]byte(result.String()), &employeeCourse.Employee)
+	json.Unmarshal([]byte(result2.String()), &employeeCourse.Courses)
+
+	if result3.String() == "finished" {
+		employeeCourse.Status = F
+	} else if result3.String() == "in progress" {
+		employeeCourse.Status = IP
+	} else if result3.String() == "suggested" {
+		employeeCourse.Status = S
+	}
+
+	Employee_courses = append(Employee_courses, employeeCourse)
+	context.JSON(http.StatusOK, employeeCourse)
+	fmt.Println(Employee_courses)
 }
-

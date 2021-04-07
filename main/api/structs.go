@@ -14,7 +14,7 @@ type Courses struct {
 }
 
 type Technologies struct {
-	IdTechnology int    `json:"idTechnologies"`
+	IdTechnology int    `json:"idTechnology"`
 	Title        string `json:"title"`
 }
 
@@ -37,8 +37,8 @@ const (
 	S  Stat = "suggested"
 )
 
-var employees []Employee
-var courses []Courses
-var employeeCourses []EmployeeCourses
-var technologies []Technologies
-var employeeTechnology []EmployeeTechnology
+var All_employees []Employee
+var All_courses []Courses
+var Employee_courses []EmployeeCourses
+var Techn []Technologies
+var Employee_technologies []EmployeeTechnology
