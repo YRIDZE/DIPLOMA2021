@@ -23,7 +23,7 @@ func Routes() *gin.Engine {
 		// предоставляем для TMS
 		// 1. GET даем TMS взятые ранее у HRM данные по работнику
 		//>>> GET у TMS данные по назначенным курсам, которые отдаем в HRM через (*)
-		r.GET("/employee", GetEmployeeSkills)
+		r.GET("/employee/:idEmployee", GetEmployeeSkills)
 
 		//реализуем инт. LMS
 		//>>> GET данные по курсам, которые находятся в процессе
