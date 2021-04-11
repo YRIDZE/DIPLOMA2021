@@ -1,7 +1,10 @@
 package api
 
 import (
+	_ "github.com/YRIDZE/DIPLOMA2021/main/docs"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 )
 
 func Routes() *gin.Engine {
@@ -30,6 +33,7 @@ func Routes() *gin.Engine {
 		//>>> GET данные по законченным курсам
 		//>>> POST передаем данные пользователя и курса, который он хочет начать проходить (**)
 
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	return router
 }

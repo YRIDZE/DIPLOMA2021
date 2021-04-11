@@ -11,6 +11,7 @@ type Employee struct {
 type Courses struct {
 	IdCourse int    `json:"idCourse"`
 	Title    string `json:"title"`
+	Status   Stat   `json:"status"`
 }
 
 type Technologies struct {
@@ -19,14 +20,13 @@ type Technologies struct {
 }
 
 type EmployeeCourses struct {
-	Employee
-	Courses
-	Status Stat `json:"status"`
+	Employee `json:"employee"`
+	C        []Courses `json:"course"`
 }
 
 type EmployeeTechnology struct {
-	Employee
-	Technologies
+	Employee `json:"employee"`
+	T        []Technologies `json:"technology"`
 }
 
 type Stat string
@@ -40,5 +40,5 @@ const (
 var All_employees []Employee
 var All_courses []Courses
 var Employee_courses []EmployeeCourses
-var Techn []Technologies
+var All_technologies []Technologies
 var Employee_technologies []EmployeeTechnology
