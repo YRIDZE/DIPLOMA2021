@@ -4,7 +4,7 @@ import (
 	_ "github.com/YRIDZE/DIPLOMA2021/main/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Routes() *gin.Engine {
@@ -12,13 +12,15 @@ func Routes() *gin.Engine {
 	router := gin.Default()
 	r := router.Group("/path")
 	{
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 		// предоставляем для HRM
 		//1. GET даем HRM инфу по назначеным курсам *
 		//2. GET даем HRM инфу по курсам, которые в процессе прохождения
 		//3. GET даем HRM инфу про законченые курсы
 		//4. POST начни для меня на курс **
 		//>>> GET у HRM данные по работнику - вложен в *
-		r.GET("/suggested/:idEmployee", GetEmployeeCourse)
+		r.GET("/suggested/:idEmployee", GetSuggesterCourse)
 		r.GET("/progress/:idEmployee", GetStartedEmplCourse)
 		r.GET("/finished/:idEmployee", GetFinishedCourses)
 		r.POST("/employee/course", PostEmployeeCourse)
@@ -33,7 +35,6 @@ func Routes() *gin.Engine {
 		//>>> GET данные по законченным курсам
 		//>>> POST передаем данные пользователя и курса, который он хочет начать проходить (**)
 
-		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	return router
 }

@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/swag/example/celler/httputil"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
 // GetEmployeeSkills
-//@Summary GetSkills
+// @Summary GetSkills
 // @Tags Technologies
 // @Description Get technology skill
 // @ID get-technologies
@@ -18,32 +19,28 @@ import (
 // @Produce json
 // @Param idEmployee path int true "Employee ID"
 // @Success 200 {object} api.EmployeeCourses
-// @Failure 400,404 {object} api.EmployeeCourses
-// @Failure 500 {object} api.EmployeeCourses
+// @Failure 400,404 {string} string	"Bad request"
+// @Failure 500 {string} string	"Internal Server Error"
 // @Router /employee/{idEmployee} [get]
 func GetEmployeeSkills(c *gin.Context) {
 	var emplTechnology EmployeeTechnology
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
-
 	resp, err := http.Get("http://localhost:8000/path/empltechn/" + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		c.Status(http.StatusServiceUnavailable)
+		httputil.NewError(c, http.StatusServiceUnavailable, err)
 		return
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, &emplTechnology)
-
-	Employee_technologies = append(Employee_technologies, emplTechnology)
-
-	for _, item := range Employee_technologies {
-		if item.Employee.IdEmployee == idEmployee {
-			//TODO: idTechnologies = 0 WTF?
-			fmt.Println(item)
-			c.JSON(http.StatusOK, item)
-			return
-		}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
 	}
-	c.JSON(http.StatusOK, Employee_technologies)
+	err = json.Unmarshal(body, &emplTechnology)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	c.JSON(http.StatusOK, emplTechnology)
 }

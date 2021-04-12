@@ -11,9 +11,7 @@ import (
 	"strconv"
 )
 
-//даем HRM инфу по назначеным курсам *
-
-// GetEmployeeCourse
+// GetSuggesterCourse
 // @Summary GetCourse
 // @Tags Course
 // @Description Get suggested courses for employee
@@ -22,40 +20,31 @@ import (
 // @Produce json
 // @Param idEmployee path int true "Employee ID"
 // @Success 200 {object} api.EmployeeCourses
-// @Failure 400,404 {object} api.EmployeeCourses
-// @Failure 500 {object} api.EmployeeCourses
+// @Failure 400,404 {string} string	"Bad request"
+// @Failure 500 {string} string	" Internal Server Error"
 // @Router /suggested/{idEmployee} [get]
-func GetEmployeeCourse(c *gin.Context) {
+func GetSuggesterCourse(c *gin.Context) {
 	var emplCourses EmployeeCourses
-	idEmployee, err := strconv.Atoi(c.Params.ByName("idEmployee"))
 
-	if err != nil {
-		httputil.NewError(c, http.StatusBadRequest, err)
-		return
-	}
-
+	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
 	resp, err := http.Get("http://localhost:8002/path/suggested/" + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		c.Status(http.StatusServiceUnavailable)
+		httputil.NewError(c, http.StatusServiceUnavailable, err)
 		return
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, &emplCourses)
-
-	Employee_courses = append(Employee_courses, emplCourses)
-
-	for _, item := range Employee_courses {
-		if item.Employee.IdEmployee == idEmployee {
-			fmt.Println(item)
-			c.JSON(http.StatusOK, item)
-			return
-		}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
 	}
-	c.JSON(http.StatusOK, Employee_courses)
-}
+	err = json.Unmarshal(body, &emplCourses)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
 
-//даем HRM инфу по курсам, которые в процессе прохождения
+	c.JSON(http.StatusOK, emplCourses)
+}
 
 // GetStartedEmplCourse
 // @Summary GetStartedCourses
@@ -66,21 +55,33 @@ func GetEmployeeCourse(c *gin.Context) {
 // @Produce json
 // @Param idEmployee path int true "Employee ID"
 // @Success 200 {object} api.EmployeeCourses
-// @Failure 400,404 {object} api.EmployeeCourses
-// @Failure 500 {object} api.EmployeeCourses
+// @Failure 400,404 {string} string	"Bad request"
+// @Failure 500 {string} string	" Internal Server Error"
 // @Router /progress/{idEmployee} [get]
 func GetStartedEmplCourse(c *gin.Context) {
-	idEmployee, _ := strconv.Atoi(c.Params.ByName("IdEmployee"))
-	for i, item := range Employee_courses {
-		if item.Employee.IdEmployee == idEmployee && item.C[i].Status == IP {
-			c.JSON(http.StatusOK, item)
-			return
-		}
-	}
-	c.JSON(http.StatusOK, Employee_courses)
-}
+	var emplCourses EmployeeCourses
 
-//даем HRM инфу про законченые курсы
+	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
+	resp, err := http.Get("http://localhost:8003/path/progress/" + strconv.Itoa(idEmployee))
+	if err != nil || resp.StatusCode != http.StatusOK {
+		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
+	}
+
+	result := gjson.Get(string(body), "employee")
+	result2 := gjson.Get(string(body), "course")
+
+	_ = json.Unmarshal([]byte(result.String()), &emplCourses.Employee)
+	_ = json.Unmarshal([]byte(result2.String()), &emplCourses.C)
+
+	c.JSON(http.StatusOK, emplCourses)
+}
 
 // GetFinishedCourses
 // @Summary GetFinishedCourses
@@ -91,21 +92,31 @@ func GetStartedEmplCourse(c *gin.Context) {
 // @Produce json
 // @Param idEmployee path int true "Employee ID"
 // @Success 200 {object} api.EmployeeCourses
-// @Failure 400,404 {object} api.EmployeeCourses
-// @Failure 500 {object} api.EmployeeCourses
+// @Failure 400,404 {string} status	"Bad request"
+// @Failure 500 {string} status	" Internal Server Error"
 // @Router /finished/{idEmployee} [get]
 func GetFinishedCourses(c *gin.Context) {
-	idEmployee, _ := strconv.Atoi(c.Params.ByName("IdEmployee"))
-	for i, item := range Employee_courses {
-		if item.Employee.IdEmployee == idEmployee && item.C[i].Status == F {
-			c.JSON(http.StatusOK, item)
-			return
-		}
-	}
-	c.JSON(http.StatusOK, Employee_courses)
-}
+	var emplCourses EmployeeCourses
 
-// передаем данные курса и работника, который его начал
+	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
+	resp, err := http.Get("http://localhost:8003/path/finished/" + strconv.Itoa(idEmployee))
+	if err != nil || resp.StatusCode != http.StatusOK {
+		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
+	}
+	err = json.Unmarshal(body, &emplCourses)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	c.JSON(http.StatusOK, emplCourses)
+}
 
 // PostEmployeeCourse
 // @Summary PostEmployeeCourses
@@ -116,18 +127,25 @@ func GetFinishedCourses(c *gin.Context) {
 // @Produce json
 // @Param input body api.EmployeeCourses true "Employee courses"
 // @Success 200 {object} api.EmployeeCourses
-// @Failure 400,404 {object} api.EmployeeCourses
-// @Failure 500 {object} api.EmployeeCourses
+// @Failure 400,404 {string} string	"Bad request"
+// @Failure 500 {string} string	" Internal Server Error"
 // @Router /employee/course [post]
 func PostEmployeeCourse(c *gin.Context) {
 	var employeeCourse EmployeeCourses
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	body, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
+	}
 
 	result := gjson.Get(string(body), "employee")
 	result2 := gjson.Get(string(body), "course")
 
-	_ = json.Unmarshal([]byte(result.String()), &employeeCourse.Employee)
-	_ = json.Unmarshal([]byte(result2.String()), &employeeCourse.C)
+	err = json.Unmarshal([]byte(result.String()), &employeeCourse.Employee)
+	err = json.Unmarshal([]byte(result2.String()), &employeeCourse.C)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
 
 	for i, item := range employeeCourse.C {
 		if item.Status == "finished" {
