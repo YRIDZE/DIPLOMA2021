@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/swag/example/celler/httputil"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -26,9 +25,9 @@ func GetEmployeeSkills(c *gin.Context) {
 	var emplTechnology EmployeeTechnology
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
-	resp, err := http.Get("http://localhost:8000/path/empltechn/" + strconv.Itoa(idEmployee))
+	resp, err := http.Get(Config.HRM_empl_endp + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
 	}
 

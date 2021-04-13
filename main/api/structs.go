@@ -37,6 +37,16 @@ const (
 	S  Stat = "suggested"
 )
 
+type appConf struct {
+	HRM_empl_endp string
+	LMS_ip_endp   string
+	LMS_f_endp    string
+	LMS_s_endp    string
+	AL_sug_endp   string
+}
+
+var Config appConf
+
 var All_employees []Employee
 var All_courses []Courses
 var Employee_courses []EmployeeCourses

@@ -1,10 +1,10 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/swag/example/celler/httputil"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
@@ -27,9 +27,9 @@ func GetSuggesterCourse(c *gin.Context) {
 	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
-	resp, err := http.Get("http://localhost:8002/path/suggested/" + strconv.Itoa(idEmployee))
+	resp, err := http.Get(Config.AL_sug_endp + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
 	}
 
@@ -62,9 +62,9 @@ func GetStartedEmplCourse(c *gin.Context) {
 	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
-	resp, err := http.Get("http://localhost:8003/path/progress/" + strconv.Itoa(idEmployee))
+	resp, err := http.Get(Config.LMS_ip_endp + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
 	}
 
@@ -99,9 +99,9 @@ func GetFinishedCourses(c *gin.Context) {
 	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
-	resp, err := http.Get("http://localhost:8003/path/finished/" + strconv.Itoa(idEmployee))
+	resp, err := http.Get(Config.LMS_f_endp + strconv.Itoa(idEmployee))
 	if err != nil || resp.StatusCode != http.StatusOK {
-		httputil.NewError(c, http.StatusServiceUnavailable, err)
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
 	}
 
@@ -133,6 +133,17 @@ func GetFinishedCourses(c *gin.Context) {
 func PostEmployeeCourse(c *gin.Context) {
 	var employeeCourse EmployeeCourses
 	body, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		fmt.Printf("Error reading the body: %v\n", err)
+		return
+	}
+	resp, err := http.Post(Config.LMS_s_endp, "application/json", bytes.NewBuffer(body))
+	if err != nil || resp.StatusCode != http.StatusOK {
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
+		return
+	}
+
+	body, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
