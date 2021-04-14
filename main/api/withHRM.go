@@ -2,10 +2,8 @@ package api
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -24,7 +22,6 @@ import (
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /suggested/{idEmployee} [get]
 func GetSuggesterCourse(c *gin.Context) {
-	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
 	resp, err := http.Get(Config.AL_sug_endp + strconv.Itoa(idEmployee))
@@ -38,12 +35,7 @@ func GetSuggesterCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	err = json.Unmarshal(body, &emplCourses)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	c.JSON(http.StatusOK, emplCourses)
+	c.JSON(http.StatusOK, Convert_EmployeeCourses(JsonToString(body)))
 }
 
 // GetStartedEmplCourse
@@ -59,7 +51,6 @@ func GetSuggesterCourse(c *gin.Context) {
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /progress/{idEmployee} [get]
 func GetStartedEmplCourse(c *gin.Context) {
-	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
 	resp, err := http.Get(Config.LMS_ip_endp + strconv.Itoa(idEmployee))
@@ -73,14 +64,7 @@ func GetStartedEmplCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-
-	result := gjson.Get(string(body), "employee")
-	result2 := gjson.Get(string(body), "course")
-
-	_ = json.Unmarshal([]byte(result.String()), &emplCourses.Employee)
-	_ = json.Unmarshal([]byte(result2.String()), &emplCourses.C)
-
-	c.JSON(http.StatusOK, emplCourses)
+	c.JSON(http.StatusOK, Convert_EmployeeCourses(JsonToString(body)))
 }
 
 // GetFinishedCourses
@@ -96,7 +80,6 @@ func GetStartedEmplCourse(c *gin.Context) {
 // @Failure 500 {string} status	" Internal Server Error"
 // @Router /finished/{idEmployee} [get]
 func GetFinishedCourses(c *gin.Context) {
-	var emplCourses EmployeeCourses
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
 	resp, err := http.Get(Config.LMS_f_endp + strconv.Itoa(idEmployee))
@@ -110,12 +93,7 @@ func GetFinishedCourses(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	err = json.Unmarshal(body, &emplCourses)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	c.JSON(http.StatusOK, emplCourses)
+	c.JSON(http.StatusOK, Convert_EmployeeCourses(JsonToString(body)))
 }
 
 // PostEmployeeCourse
@@ -131,7 +109,7 @@ func GetFinishedCourses(c *gin.Context) {
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /employee/course [post]
 func PostEmployeeCourse(c *gin.Context) {
-	var employeeCourse EmployeeCourses
+
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
@@ -148,27 +126,5 @@ func PostEmployeeCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-
-	result := gjson.Get(string(body), "employee")
-	result2 := gjson.Get(string(body), "course")
-
-	err = json.Unmarshal([]byte(result.String()), &employeeCourse.Employee)
-	err = json.Unmarshal([]byte(result2.String()), &employeeCourse.C)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	for i, item := range employeeCourse.C {
-		if item.Status == "finished" {
-			employeeCourse.C[i].Status = F
-		} else if item.Status == "in progress" {
-			employeeCourse.C[i].Status = IP
-		} else if item.Status == "suggested" {
-			employeeCourse.C[i].Status = S
-		}
-	}
-
-	Employee_courses = append(Employee_courses, employeeCourse)
-	c.JSON(http.StatusOK, employeeCourse)
-	fmt.Println(Employee_courses)
+	c.JSON(http.StatusOK, Convert_EmployeeCourses(JsonToString(body)))
 }

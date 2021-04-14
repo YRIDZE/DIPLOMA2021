@@ -7,12 +7,28 @@ import (
 	"os"
 )
 
-// @title HRM API
-// @version 1.0
-// @description API Server for HRM system
-
-// @host localhost:8001
-// @BasePath /path
+var data = []byte(`{
+    "employee": { 
+        "idEmployee": 2,
+        "firstName": "John",
+        "lastName": "Doll",
+        "email": "JohnDoll@gmail.com",
+        "password": "123454321",
+        "country": "USA"
+    },
+    "course": [  
+        {
+            "idCourse": 2,
+            "title": "C#",
+            "status": "suggested"
+        },
+        {
+            "idCourse": 4,
+            "title": "C",
+            "status": "in progress"
+        }
+    ]
+}`)
 
 func LoadConfig(configPaths string) {
 	file, err := os.Open(configPaths)
@@ -27,8 +43,18 @@ func LoadConfig(configPaths string) {
 	}
 }
 
+// @title HRM API
+// @version 1.0
+// @description API Server for HRM system
+
+// @host localhost:8001
+// @BasePath /path
+
 func main() {
+
+	fmt.Println(api.Convert_EmployeeCourses(api.JsonToString(data)))
 	LoadConfig("main/configuration.json")
+
 	router := api.Routes()
 	router.Run(":8001")
 }

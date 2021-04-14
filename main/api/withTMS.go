@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -22,7 +21,6 @@ import (
 // @Failure 500 {string} string	"Internal Server Error"
 // @Router /employee/{idEmployee} [get]
 func GetEmployeeSkills(c *gin.Context) {
-	var emplTechnology EmployeeTechnology
 
 	idEmployee, _ := strconv.Atoi(c.Params.ByName("idEmployee"))
 	resp, err := http.Get(Config.HRM_empl_endp + strconv.Itoa(idEmployee))
@@ -36,10 +34,5 @@ func GetEmployeeSkills(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	err = json.Unmarshal(body, &emplTechnology)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-
-	c.JSON(http.StatusOK, emplTechnology)
+	c.JSON(http.StatusOK, Convert_EmployeeTechnologies(JsonToString(body)))
 }
