@@ -7,12 +7,12 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Routes() *gin.Engine {
+func InitRoutes() *gin.Engine {
 
-	router := gin.Default()
-	r := router.Group("/path")
+	router := gin.New()
+	api := router.Group("/path")
 	{
-		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		// предоставляем для HRM
 		//1. GET даем HRM инфу по назначеным курсам *
@@ -20,15 +20,15 @@ func Routes() *gin.Engine {
 		//3. GET даем HRM инфу про законченые курсы
 		//4. POST начни для меня на курс **
 		//>>> GET у HRM данные по работнику - вложен в *
-		r.GET("/suggested/:idEmployee", GetSuggesterCourse)
-		r.GET("/progress/:idEmployee", GetStartedEmplCourse)
-		r.GET("/finished/:idEmployee", GetFinishedCourses)
-		r.POST("/employee/course", PostEmployeeCourse)
+		api.GET("/suggested/:idEmployee", GetSuggesterCourse)
+		api.GET("/progress/:idEmployee", GetStartedEmplCourse)
+		api.GET("/finished/:idEmployee", GetFinishedCourses)
+		api.POST("/employee/course", PostEmployeeCourse)
 
 		// предоставляем для TMS
 		// 1. GET даем TMS взятые ранее у HRM данные по работнику
 		//>>> GET у TMS данные по назначенным курсам, которые отдаем в HRM через (*)
-		r.GET("/employee/:idEmployee", GetEmployeeSkills)
+		api.GET("/employee", GetEmployeeSkills)
 
 		//реализуем инт. LMS
 		//>>> GET данные по курсам, которые находятся в процессе

@@ -1,12 +1,12 @@
-package api
+package data
 
 type Employee struct {
-	IdEmployee int    `json:"idEmployee"`
+	IdEmployee string `json:"idEmployee"`
 	FirstName  string `json:"firstName"`
 	LastName   string `json:"lastName"`
-	Email      string `json:"email"`
-	Password   string `json:"password"`
-	Country    string `json:"country"`
+	//Email      string `json:"email"`
+	//Password   string `json:"password"`
+	//Country    string `json:"country"`
 }
 type Courses struct {
 	IdCourse int    `json:"idCourse"`
@@ -47,8 +47,8 @@ type appConf struct {
 
 var Config appConf
 
-var All_employees []Employee
-var All_courses []Courses
-var Employee_courses []EmployeeCourses
-var All_technologies []Technologies
-var Employee_technologies []EmployeeTechnology
+//var AllEmployees []Employee
+//var AllCourses []Courses
+//var Employee_courses []EmployeeCourses
+//var AllTechnologies []Technologies
+//var EmployeeTechnologies []EmployeeTechnology

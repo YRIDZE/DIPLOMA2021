@@ -1,0 +1,5 @@
+"HRM_empl_endp": "http://localhost:8000/path/empltechn"
+"LMS_ip_endp": "http://localhost:8003/path/progress/"
+"LMS_f_endp": "http://localhost:8003/path/finished/"
+"LMS_s_endp": "http://localhost:8003/path/employee/course"
+"AL_sug_endp": "http://localhost:8002/path/suggested/"
