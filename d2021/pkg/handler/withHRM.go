@@ -1,12 +1,13 @@
-package api
+package handler
 
 import (
 	"fmt"
-	"github.com/YRIDZE/DIPLOMA2021/main/data"
+	d2021 "github.com/YRIDZE/DIPLOMA2021/main"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // GetSuggesterCourse
@@ -21,9 +22,20 @@ import (
 // @Failure 400,404 {string} string	"Bad request"
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /suggested/{idEmployee} [get]
-func GetSuggesterCourse(c *gin.Context) {
+func (h *Handler) getSuggesterCourse(c *gin.Context) {
 
-	resp, err := http.Get(viper.GetString("AL_sug_endp") + c.Params.ByName("idEmployee"))
+	client := http.Client{}
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+
+	req, err := http.NewRequest("GET", viper.GetString("routs.AL_sug_endp"), nil)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+	}
+
+	req.Header = map[string][]string{
+		"Authorization": {fmt.Sprintf("Bearer %s", token)},
+	}
+	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
@@ -34,5 +46,5 @@ func GetSuggesterCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	c.JSON(http.StatusOK, data.ConvertEmployeeCourses(data.JsonToString(body)))
+	c.JSON(http.StatusOK, d2021.ConvertEmployeeCourses(d2021.JsonToString(body)))
 }

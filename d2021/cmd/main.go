@@ -1,28 +1,11 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	api "github.com/YRIDZE/DIPLOMA2021/main/api"
-	data "github.com/YRIDZE/DIPLOMA2021/main/data"
+	"github.com/YRIDZE/DIPLOMA2021/main"
+	"github.com/YRIDZE/DIPLOMA2021/main/pkg/handler"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"os"
 )
-
-func LoadConfig(configPaths string) {
-	file, err := os.Open(configPaths)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	defer file.Close()
-
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&data.Config)
-	if err != nil {
-		fmt.Println("error: ", err)
-	}
-}
 
 // @title HRM API
 // @version 1.0
@@ -39,8 +22,11 @@ func main() {
 		logrus.Fatalf("error initializing configs: %s", err.Error())
 	}
 
-	router := api.InitRoutes()
-	router.Run(":8001")
+	handlers := handler.NewHandler()
+	srv := new(d2021.Server)
+	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+		logrus.Fatalf("error occured while running http server: %s", err.Error())
+	}
 }
 
 func initConfig() error {

@@ -1,4 +1,4 @@
-package data
+package d2021
 
 type Employee struct {
 	IdEmployee string `json:"idEmployee"`

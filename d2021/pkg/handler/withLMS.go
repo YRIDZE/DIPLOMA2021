@@ -1,9 +1,9 @@
-package api
+package handler
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/YRIDZE/DIPLOMA2021/main/data"
+	d2021 "github.com/YRIDZE/DIPLOMA2021/main"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -23,12 +23,12 @@ import (
 // @Failure 400,404 {string} string	"Bad request"
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /progress/{idEmployee} [get]
-func GetStartedEmplCourse(c *gin.Context) {
+func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 
 	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
 
-	req, err := http.NewRequest("GET", viper.GetString("LMS_ip_endp"), nil)
+	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_ip_endp"), nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -47,7 +47,7 @@ func GetStartedEmplCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	c.JSON(http.StatusOK, data.ConvertEmployeeCourses(data.JsonToString(body)))
+	c.JSON(http.StatusOK, d2021.ConvertEmployeeCourses(d2021.JsonToString(body)))
 }
 
 // GetFinishedCourses
@@ -62,12 +62,12 @@ func GetStartedEmplCourse(c *gin.Context) {
 // @Failure 400,404 {string} status	"Bad request"
 // @Failure 500 {string} status	" Internal Server Error"
 // @Router /finished/{idEmployee} [get]
-func GetFinishedCourses(c *gin.Context) {
+func (h *Handler) getFinishedCourses(c *gin.Context) {
 
 	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
 
-	req, err := http.NewRequest("GET", viper.GetString("LMS_f_endp"), nil)
+	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_f_endp"), nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -86,7 +86,7 @@ func GetFinishedCourses(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	c.JSON(http.StatusOK, data.ConvertEmployeeCourses(data.JsonToString(body)))
+	c.JSON(http.StatusOK, d2021.ConvertEmployeeCourses(d2021.JsonToString(body)))
 }
 
 // PostEmployeeCourse
@@ -101,7 +101,7 @@ func GetFinishedCourses(c *gin.Context) {
 // @Failure 400,404 {string} string	"Bad request"
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /employee/course [post]
-func PostEmployeeCourse(c *gin.Context) {
+func (h *Handler) postEmployeeCourse(c *gin.Context) {
 
 	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
@@ -112,7 +112,7 @@ func PostEmployeeCourse(c *gin.Context) {
 		return
 	}
 
-	req, err := http.NewRequest("PUT", viper.GetString("LMS_s_endp"), bytes.NewBuffer(body))
+	req, err := http.NewRequest("PUT", viper.GetString("routs.LMS_s_endp"), bytes.NewBuffer(body))
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}

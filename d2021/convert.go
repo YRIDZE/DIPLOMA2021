@@ -1,4 +1,4 @@
-package data
+package d2021
 
 import (
 	"github.com/tidwall/gjson"
