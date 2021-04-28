@@ -20,15 +20,15 @@ func InitRoutes() *gin.Engine {
 		//3. GET даем HRM инфу про законченые курсы
 		//4. POST начни для меня на курс **
 		//>>> GET у HRM данные по работнику - вложен в *
-		api.GET("/suggested/:idEmployee", GetSuggesterCourse)
-		api.GET("/progress/:idEmployee", GetStartedEmplCourse)
-		api.GET("/finished/:idEmployee", GetFinishedCourses)
+		api.GET("/suggested", GetSuggesterCourse)
+		api.GET("/progress", GetStartedEmplCourse)
+		api.GET("/finished", GetFinishedCourses)
 		api.POST("/employee/course", PostEmployeeCourse)
 
 		// предоставляем для TMS
 		// 1. GET даем TMS взятые ранее у HRM данные по работнику
 		//>>> GET у TMS данные по назначенным курсам, которые отдаем в HRM через (*)
-		api.GET("/employee", GetEmployeeSkills)
+		api.GET("/empltechn", GetEmployeeSkills)
 
 		//реализуем инт. LMS
 		//>>> GET данные по курсам, которые находятся в процессе

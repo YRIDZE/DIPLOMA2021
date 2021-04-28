@@ -1,0 +1,203 @@
+basePath: /path
+definitions:
+  data.Courses:
+    properties:
+      idCourse:
+        type: integer
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  data.EmployeeCourses:
+    properties:
+      course:
+        items:
+          $ref: '#/definitions/data.Courses'
+        type: array
+      firstName:
+        type: string
+      idEmployee:
+        type: integer
+      lastName:
+        type: string
+    type: object
+host: localhost:8001
+info:
+  contact: {}
+  description: API Server for HRM system
+  title: HRM API
+  version: "1.0"
+paths:
+  /employee/{idEmployee}:
+    get:
+      consumes:
+      - application/json
+      description: Get technology skill
+      operationId: get-technologies
+      parameters:
+      - description: Employee ID
+        in: path
+        name: idEmployee
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.EmployeeCourses'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: GetSkills
+      tags:
+      - Technologies
+  /employee/course:
+    post:
+      consumes:
+      - application/json
+      description: Start taking the course assigned to the employee
+      operationId: post-course-to-start
+      parameters:
+      - description: Employee courses
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/data.EmployeeCourses'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.EmployeeCourses'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: ' Internal Server Error'
+          schema:
+            type: string
+      summary: PostEmployeeCourses
+      tags:
+      - Course
+  /finished/{idEmployee}:
+    get:
+      consumes:
+      - application/json
+      description: Get finished by employee courses
+      operationId: get-finished-course
+      parameters:
+      - description: Employee ID
+        in: path
+        name: idEmployee
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.EmployeeCourses'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: ' Internal Server Error'
+          schema:
+            type: string
+      summary: GetFinishedCourses
+      tags:
+      - Course
+  /progress/{idEmployee}:
+    get:
+      consumes:
+      - application/json
+      description: Get started by employee courses
+      operationId: get-started-course
+      parameters:
+      - description: Employee ID
+        in: path
+        name: idEmployee
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.EmployeeCourses'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: ' Internal Server Error'
+          schema:
+            type: string
+      summary: GetStartedCourses
+      tags:
+      - Course
+  /suggested/{idEmployee}:
+    get:
+      consumes:
+      - application/json
+      description: Get suggested courses for employee
+      operationId: get-suggested-course
+      parameters:
+      - description: Employee ID
+        in: path
+        name: idEmployee
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.EmployeeCourses'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "404":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: ' Internal Server Error'
+          schema:
+            type: string
+      summary: GetCourse
+      tags:
+      - Course
+swagger: "2.0"

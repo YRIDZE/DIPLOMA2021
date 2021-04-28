@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // GetStartedEmplCourse
@@ -24,7 +25,18 @@ import (
 // @Router /progress/{idEmployee} [get]
 func GetStartedEmplCourse(c *gin.Context) {
 
-	resp, err := http.Get(viper.GetString("LMS_ip_endp") + c.Params.ByName("idEmployee"))
+	client := http.Client{}
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+
+	req, err := http.NewRequest("GET", viper.GetString("LMS_ip_endp"), nil)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+	}
+
+	req.Header = map[string][]string{
+		"Authorization": {fmt.Sprintf("Bearer %s", token)},
+	}
+	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
@@ -52,7 +64,18 @@ func GetStartedEmplCourse(c *gin.Context) {
 // @Router /finished/{idEmployee} [get]
 func GetFinishedCourses(c *gin.Context) {
 
-	resp, err := http.Get(viper.GetString("LMS_f_endp") + c.Params.ByName("idEmployee"))
+	client := http.Client{}
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+
+	req, err := http.NewRequest("GET", viper.GetString("LMS_f_endp"), nil)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+	}
+
+	req.Header = map[string][]string{
+		"Authorization": {fmt.Sprintf("Bearer %s", token)},
+	}
+	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
 		return
@@ -73,28 +96,37 @@ func GetFinishedCourses(c *gin.Context) {
 // @ID post-course-to-start
 // @Accept json
 // @Produce json
-// @Param input body data.EmployeeCourses true "Employee courses"
-// @Success 200 {object} data.EmployeeCourses
+// @Param input body data.Courses.Title true "Employee course"
+// @Success 200 {object} data.Courses.Title
 // @Failure 400,404 {string} string	"Bad request"
 // @Failure 500 {string} string	" Internal Server Error"
 // @Router /employee/course [post]
 func PostEmployeeCourse(c *gin.Context) {
+
+	client := http.Client{}
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
 
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	resp, err := http.Post(viper.GetString("LMS_s_endp"), "application/json", bytes.NewBuffer(body))
-	if err != nil || resp.StatusCode != http.StatusOK {
-		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
-		return
+
+	req, err := http.NewRequest("PUT", viper.GetString("LMS_s_endp"), bytes.NewBuffer(body))
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
 
-	body, err = ioutil.ReadAll(resp.Body)
+	req.Header = map[string][]string{
+		"Authorization": {fmt.Sprintf("Bearer %s", token)},
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+
+	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-	c.JSON(http.StatusOK, data.ConvertEmployeeCourses(data.JsonToString(body)))
+	c.JSON(http.StatusOK, statusResponse{"ok"})
 }

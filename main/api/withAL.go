@@ -23,11 +23,15 @@ import (
 // @Failure 500 {string} string	"Internal Server Error"
 // @Router /employee[get]
 func GetEmployeeSkills(c *gin.Context) {
-	client := http.Client{}
 
+	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
 
 	req, err := http.NewRequest(http.MethodGet, viper.GetString("HRM_empl_endp"), nil)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+	}
+
 	req.Header = map[string][]string{
 		"Authorization": {fmt.Sprintf("Bearer %s", token)},
 	}
@@ -38,11 +42,9 @@ func GetEmployeeSkills(c *gin.Context) {
 		return
 	}
 
-	defer resp.Body.Close()
-
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Printf("Error reading the body: %v\n", err)
+		fmt.Printf("error reading the body: %v\n", err)
 		return
 	}
 	c.JSON(http.StatusOK, data.ConvertEmployeeTechnologies(data.JsonToString(body)))
