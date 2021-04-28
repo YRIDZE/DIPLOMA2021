@@ -13,20 +13,21 @@ import (
 
 // GetStartedEmplCourse
 // @Summary GetStartedCourses
+// @Security ApiKeyAuth
 // @Tags Course
 // @Description Get started by employee courses
 // @ID get-started-course
 // @Accept json
 // @Produce json
-// @Param idEmployee path int true "Employee ID"
-// @Success 200 {object} data.EmployeeCourses
-// @Failure 400,404 {string} string	"Bad request"
-// @Failure 500 {string} string	" Internal Server Error"
-// @Router /progress/{idEmployee} [get]
+// @Success 200 {object} d2021.CoursesConv
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /progress [get]
 func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 
 	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
 
 	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_ip_endp"), nil)
 	if err != nil {
@@ -52,20 +53,21 @@ func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 
 // GetFinishedCourses
 // @Summary GetFinishedCourses
+// @Security ApiKeyAuth
 // @Tags Course
 // @Description Get finished by employee courses
 // @ID get-finished-course
 // @Accept json
 // @Produce json
-// @Param idEmployee path int true "Employee ID"
-// @Success 200 {object} data.EmployeeCourses
-// @Failure 400,404 {string} status	"Bad request"
-// @Failure 500 {string} status	" Internal Server Error"
-// @Router /finished/{idEmployee} [get]
+// @Success 200 {object} d2021.CoursesConv
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /finished [get]
 func (h *Handler) getFinishedCourses(c *gin.Context) {
 
 	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
 
 	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_f_endp"), nil)
 	if err != nil {
@@ -91,20 +93,21 @@ func (h *Handler) getFinishedCourses(c *gin.Context) {
 
 // PostEmployeeCourse
 // @Summary PostEmployeeCourses
+// @Security ApiKeyAuth
 // @Tags Course
 // @Description Start taking the course assigned to the employee
 // @ID post-course-to-start
 // @Accept json
 // @Produce json
-// @Param input body data.Courses.Title true "Employee course"
-// @Success 200 {object} data.Courses.Title
-// @Failure 400,404 {string} string	"Bad request"
-// @Failure 500 {string} string	" Internal Server Error"
+// @Param input body d2021.CoursesConv true "Employee course"
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
 // @Router /employee/course [post]
 func (h *Handler) postEmployeeCourse(c *gin.Context) {
 
 	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
 
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {

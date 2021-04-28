@@ -15,8 +15,7 @@ type Courses struct {
 }
 
 type Technologies struct {
-	IdTechnology int    `json:"idTechnology"`
-	Title        string `json:"title"`
+	Title string `json:"title"`
 }
 
 type EmployeeCourses struct {

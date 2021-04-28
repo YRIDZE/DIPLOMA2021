@@ -10,22 +10,11 @@ import (
 	"strings"
 )
 
-// GetEmployeeSkills
-// @Summary GetSkills
-// @Tags Technologies
-// @Description Get technology skill
-// @ID get-technologies
-// @Accept json
-// @Produce json
-// @Param idEmployee path int true "Employee ID"
-// @Success 200 {object} data.EmployeeCourses
-// @Failure 400,404 {string} string	"Bad request"
-// @Failure 500 {string} string	"Internal Server Error"
-// @Router /employee[get]
 func (h *Handler) getEmployeeSkills(c *gin.Context) {
 
 	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	fmt.Println(token)
 
 	req, err := http.NewRequest(http.MethodGet, viper.GetString("routs.HRM_empl_endp"), nil)
 	if err != nil {

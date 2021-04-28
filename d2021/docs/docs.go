@@ -25,6 +25,11 @@ var doc = `{
     "paths": {
         "/employee/course": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Start taking the course assigned to the employee",
                 "consumes": [
                     "application/json"
@@ -39,96 +44,50 @@ var doc = `{
                 "operationId": "post-course-to-start",
                 "parameters": [
                     {
-                        "description": "Employee courses",
+                        "description": "Employee course",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
+                            "$ref": "#/definitions/d2021.CoursesConv"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
-                        }
-                    },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "404": {
-                        "description": "Bad request",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": " Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/employee/{idEmployee}": {
-            "get": {
-                "description": "Get technology skill",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Technologies"
-                ],
-                "summary": "GetSkills",
-                "operationId": "get-technologies",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Employee ID",
-                        "name": "idEmployee",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Bad request",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/finished/{idEmployee}": {
+        "/finished": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get finished by employee courses",
                 "consumes": [
                     "application/json"
@@ -141,45 +100,47 @@ var doc = `{
                 ],
                 "summary": "GetFinishedCourses",
                 "operationId": "get-finished-course",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Employee ID",
-                        "name": "idEmployee",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
+                            "$ref": "#/definitions/d2021.CoursesConv"
                         }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "404": {
-                        "description": "Bad request",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "500": {
-                        "description": " Internal Server Error",
+                        "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/progress/{idEmployee}": {
+        "/progress": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get started by employee courses",
                 "consumes": [
                     "application/json"
@@ -192,45 +153,47 @@ var doc = `{
                 ],
                 "summary": "GetStartedCourses",
                 "operationId": "get-started-course",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Employee ID",
-                        "name": "idEmployee",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
+                            "$ref": "#/definitions/d2021.CoursesConv"
                         }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "404": {
-                        "description": "Bad request",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "500": {
-                        "description": " Internal Server Error",
+                        "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/suggested/{idEmployee}": {
+        "/suggested": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get suggested courses for employee",
                 "consumes": [
                     "application/json"
@@ -243,38 +206,35 @@ var doc = `{
                 ],
                 "summary": "GetCourse",
                 "operationId": "get-suggested-course",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Employee ID",
-                        "name": "idEmployee",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.EmployeeCourses"
+                            "$ref": "#/definitions/d2021.CoursesConv"
                         }
                     },
                     "400": {
-                        "description": "Bad request",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "404": {
-                        "description": "Bad request",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     },
                     "500": {
-                        "description": " Internal Server Error",
+                        "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
                         }
                     }
                 }
@@ -282,39 +242,28 @@ var doc = `{
         }
     },
     "definitions": {
-        "data.Courses": {
+        "d2021.CoursesConv": {
             "type": "object",
             "properties": {
-                "idCourse": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
                 "title": {
                     "type": "string"
                 }
             }
         },
-        "data.EmployeeCourses": {
+        "handler.errorResponse": {
             "type": "object",
             "properties": {
-                "course": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/data.Courses"
-                    }
-                },
-                "firstName": {
-                    "type": "string"
-                },
-                "idEmployee": {
-                    "type": "integer"
-                },
-                "lastName": {
+                "message": {
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
