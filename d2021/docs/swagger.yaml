@@ -5,6 +5,11 @@ definitions:
       title:
         type: string
     type: object
+  d2021.Technologies:
+    properties:
+      title:
+        type: string
+    type: object
   handler.errorResponse:
     properties:
       message:
@@ -54,6 +59,40 @@ paths:
       summary: PostEmployeeCourses
       tags:
       - Course
+  /empltechn:
+    get:
+      consumes:
+      - application/json
+      description: Get employee technology skills
+      operationId: get-technologies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/d2021.Technologies'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: GetEmployeeSkills
+      tags:
+      - Technology
   /finished:
     get:
       consumes:
