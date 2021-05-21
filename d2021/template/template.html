@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/icons_font.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+        integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+        integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+        crossorigin="anonymous"></script>
+    <title>HRM</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark ">
+        <div class="container-fluid d-flex justify-content-between">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" style="color:dodgerblue"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" style="font-weight: bold;">LYNCH | HUMAN RESOURCE MANAGEMENT SYSTEM</a>
+                </li>
+            </ul>
+            <!-- <li class="nav-item">
+                    <a class="nav-link">EMPLOYEES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">TASKS</a>
+                </li> -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" style="color:dodgerblue; font-weight: bold">DAVID</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container emp-profile">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img src="/api.png" alt="" class="img-raised rounded-circle img-fluid" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h3> David Keith Lynch </h3>
+                    <h6> Web Developer and Designer </h6>
+                    <p class="proile-rating">RANKINGS : <span>9/10</span></p>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab">Tasks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="profile-tab">Education</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <p>LINKS</p>
+                    <a><i class="far fa-user"></i> Personal Website</a><br />
+                    <a><i class="fab fa-linkedin"></i> LinkedIn </a><br />
+                    <a><i class="fab fa-github-square"></i> GitHub</a>
+                    <p>SKILLS</p>
+                    <a>Web Designer</a><br />
+                    <a>Web Developer</a><br />
+                    <a>WordPress</a><br />
+                    <a>PHP, JS</a><br />
+                </div>
+            </div>
+
+            <div class="tab-content education-tab" id="myTabContent">
+                <div class="tab-pane fade show active">
+                    <div class="profile-work">
+
+                        <a href="#" class="btn btn-link" data-bs-toggle="collapse" type="button"
+                            data-bs-target="#showProgress" aria-expanded="false" aria-controls="showProgress">IN
+                            PROGRESS</a>
+
+
+
+                        <div class="collapse" id="showProgress">
+                            <div class="card card-body">
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                            </div>
+                        </div>
+
+                        </br>
+                        <a href="#" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#showFinished"
+                            aria-expanded="false" aria-controls="showFinished">FINISHED</a>
+
+
+
+                        <div class="collapse" id="showFinished">
+                            <div class="card card-body">
+
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+                                <h6>Using pretranspiled version of BootstrapVue for Nuxt.js</h6>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

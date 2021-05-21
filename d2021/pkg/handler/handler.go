@@ -24,19 +24,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	api := router.Group("/path")
 	{
 		// предоставляем для HRM
-		//1. GET даем HRM инфу по назначеным курсам *
-		//2. GET даем HRM инфу по курсам, которые в процессе прохождения
-		//3. GET даем HRM инфу про законченые курсы
-		//4. POST начни для меня на курс **
-		//>>> GET у HRM данные по работнику - вложен в *
+		//1. GET даем HRM информацию по назначенным курсам *
+		//2. GET даем HRM информацию по курсам, которые в процессе прохождения
+		//3. GET даем HRM информацию про законченные курсы
+		//4. POST передаем название курса, который хотим начать **
+
 		api.GET("/suggested", h.getSuggesterCourse)
 		api.GET("/progress", h.getStartedEmplCourse)
 		api.GET("/finished", h.getFinishedCourses)
 		api.POST("/employee/course", h.postEmployeeCourse)
 
 		// предоставляем для TMS
-		// 1. GET даем TMS взятые ранее у HRM данные по работнику
-		//>>> GET у TMS данные по назначенным курсам, которые отдаем в HRM через (*)
+		// 1. GET даем модулю адаптивного обучения взятые ранее у HRM данные по работнику
+		//>>> GET у модуля адаптивного обучения данные по назначенным курсам, которые отдаем в HRM через (*)
 		api.GET("/empltechn", h.getEmployeeSkills)
 
 		//реализуем инт. LMS

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	d2021 "github.com/YRIDZE/DIPLOMA2021/main"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -26,17 +25,19 @@ import (
 // @Router /suggested [get]
 func (h *Handler) getSuggesterCourse(c *gin.Context) {
 
-	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1] //0
 
-	req, err := http.NewRequest("GET", viper.GetString("routs.AL_sug_endp"), nil)
+	//path:= viper.GetString("routs.AL_sug_endp")
+	req, err := http.NewRequest("GET", "http://localhost:8002/path/suggested", nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
 	}
-
 	req.Header = map[string][]string{
 		"Authorization": {fmt.Sprintf("Bearer %s", token)},
 	}
+
+	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
@@ -48,16 +49,14 @@ func (h *Handler) getSuggesterCourse(c *gin.Context) {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
-
-	request, err := http.NewRequest("POST", viper.GetString("routs.LMS_sug_endp"), bytes.NewBuffer(body))
+	//path=viper.GetString("routs.HRM_sug_endp")
+	request, err := http.NewRequest("POST", "http://localhost:8000/path/suggcourses", bytes.NewBuffer(body))
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
-
 	request.Header = map[string][]string{
 		"Authorization": {fmt.Sprintf("Bearer %s", token)},
 	}
-	request.Header.Set("Content-Type", "application/json")
 	_, err = client.Do(request)
 
 	c.JSON(http.StatusOK, d2021.ConvertEmployeeCourses(d2021.JsonToString(body)))

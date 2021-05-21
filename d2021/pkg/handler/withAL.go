@@ -4,19 +4,31 @@ import (
 	"fmt"
 	"github.com/YRIDZE/DIPLOMA2021/main"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
+// GetEmployeeSkills
+// @Summary GetEmployeeSkills
+// @Security ApiKeyAuth
+// @Tags Technology
+// @Description Get employee technology skills
+// @ID get-technologies
+// @Accept json
+// @Produce json
+// @Success 200 {object} d2021.Technologies
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /empltechn [get]
 func (h *Handler) getEmployeeSkills(c *gin.Context) {
 
 	client := http.Client{}
 	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
-	fmt.Println(token)
+	//path:=viper.GetString("routs.HRM_empl_endp")
+	req, err := http.NewRequest(http.MethodGet, "http://localhost:8000/path/empltechn", nil)
 
-	req, err := http.NewRequest(http.MethodGet, viper.GetString("routs.HRM_empl_endp"), nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -24,6 +36,7 @@ func (h *Handler) getEmployeeSkills(c *gin.Context) {
 	req.Header = map[string][]string{
 		"Authorization": {fmt.Sprintf("Bearer %s", token)},
 	}
+	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 
 	if err != nil || resp.StatusCode != http.StatusOK {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	d2021 "github.com/YRIDZE/DIPLOMA2021/main"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -27,9 +26,9 @@ import (
 func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 
 	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
-
-	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_ip_endp"), nil)
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	//path:=viper.GetString("routs.LMS_ip_endp")
+	req, err := http.NewRequest("GET", "http://localhost:8003/path/progress", nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -40,13 +39,11 @@ func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
-		return
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
-		return
 	}
 	c.JSON(http.StatusOK, d2021.ConvertEmployeeCourses(d2021.JsonToString(body)))
 }
@@ -67,9 +64,9 @@ func (h *Handler) getStartedEmplCourse(c *gin.Context) {
 func (h *Handler) getFinishedCourses(c *gin.Context) {
 
 	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
-
-	req, err := http.NewRequest("GET", viper.GetString("routs.LMS_f_endp"), nil)
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1] //0
+	//path:= viper.GetString("routs.LMS_f_endp")
+	req, err := http.NewRequest("GET", "http://localhost:8003/path/finished", nil)
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -106,16 +103,15 @@ func (h *Handler) getFinishedCourses(c *gin.Context) {
 // @Router /employee/course [post]
 func (h *Handler) postEmployeeCourse(c *gin.Context) {
 
-	client := http.Client{}
-	token := strings.Split(c.Request.Header["Authorization"][0], " ")[0]
-
+	token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Printf("Error reading the body: %v\n", err)
 		return
 	}
 
-	req, err := http.NewRequest("PUT", viper.GetString("routs.LMS_s_endp"), bytes.NewBuffer(body))
+	//path := viper.GetString("routs.LMS_s_endp")
+	req, err := http.NewRequest("PUT", "http://localhost:8003/path/employee/course", bytes.NewBuffer(body))
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
@@ -123,8 +119,13 @@ func (h *Handler) postEmployeeCourse(c *gin.Context) {
 	req.Header = map[string][]string{
 		"Authorization": {fmt.Sprintf("Bearer %s", token)},
 	}
-	req.Header.Set("Content-Type", "application/json")
+
+	client := http.Client{}
 	resp, err := client.Do(req)
+	if err != nil || resp.StatusCode != http.StatusOK {
+		newErrorResponse(c, http.StatusServiceUnavailable, err.Error())
+		return
+	}
 
 	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
